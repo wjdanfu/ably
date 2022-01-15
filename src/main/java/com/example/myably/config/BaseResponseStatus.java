@@ -20,7 +20,9 @@ public enum BaseResponseStatus {
     NON_EXIST_PHONE_CODE(false,2012,"먼저 코드 전송을 해주세요."),
     INVALID_AUTH_PHONE_CODE(false,2013,"코드가 일치하지 않습니다."),
     NON_VERIFIED_PHONE_NUMBER(false,2014,"인증 완료된 휴대폰 번호가 아닙니다."),
-    ALREADY_VERIFIED_PHONE(false,2015,"이미 인증 된 휴대폰 번호입니다.");
+    ALREADY_VERIFIED_PHONE(false,2015,"이미 인증 된 휴대폰 번호입니다."),
+    NON_EXIST_USER(false,2016,"가입된 회원이 아닙니다."),
+    FAIL_LOGIN(false,2017,"비밀번호가 틀렸습니다.");
 
 
     private final boolean isSuccess;

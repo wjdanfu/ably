@@ -1,6 +1,7 @@
 package com.example.myably.user;
 
 
+import com.example.myably.user.dto.LoginInfo;
 import com.example.myably.user.dto.PostCodeReq;
 import com.example.myably.user.dto.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,6 @@ public class UserDao {
         this.jdbcTemplate.update(createUserQuery, createUserParams);
     }
 
-    public int checkName(String name){
-        return this.jdbcTemplate.queryForObject("select exists(select name from User where name = ?)",
-                int.class,
-                name);
-    }
-
     public int checkNickName(String nickName){
         return this.jdbcTemplate.queryForObject("select exists(select nickName from User where nickName = ?)",
                 int.class,
@@ -45,6 +40,7 @@ public class UserDao {
                 phoneNumber);
 
     }
+
 
     public void createAuth(String phoneNumber, String code){
         String createAuthQuery = "insert into auth (phoneNumber, code) values (?,?)";
@@ -78,11 +74,25 @@ public class UserDao {
     }
 
     public char checkPhoneVerify(String phoneNumber){
-        System.out.println(phoneNumber);
         char check = this.jdbcTemplate.queryForObject("select STATUS from AUTH where phonenumber = ?",
                 char.class,phoneNumber);
-        System.out.println(check);
         return check;
+    }
+
+    public LoginInfo checkPhoneNumberAccount(String phoneNumber) {
+        return this.jdbcTemplate.queryForObject("select password, userIdx from user where phoneNumber=?",
+                (rs, rowNum) -> new LoginInfo(
+                        rs.getString("password"),
+                        rs.getInt("userIdx")),
+                phoneNumber);
+    }
+
+    public LoginInfo checkNickNameAccount(String nickName){
+            return this.jdbcTemplate.queryForObject("select password, userIdx from user where nickName=?",
+                    (rs, rowNum) -> new LoginInfo(
+                            rs.getString("password"),
+                            rs.getInt("userIdx")),
+                    nickName);
     }
 
 }

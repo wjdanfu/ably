@@ -75,4 +75,22 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @PostMapping("/login")
+    public BaseResponse<PostLoginRes> loginUser(@RequestBody PostLoginReq postLoginReq) {
+        if(postLoginReq.getPhoneNumber() == null && postLoginReq.getNickName() ==null){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }else if (postLoginReq.getPassword()==null){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+        if(postLoginReq.getPhoneNumber() != null && !isPhoneNumber(postLoginReq.getPhoneNumber())){
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE_NUMBER);
+        }
+        try{
+            PostLoginRes postLoginRes = userService.loginUser(postLoginReq);
+            return new BaseResponse<>(postLoginRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
