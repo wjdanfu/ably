@@ -1,6 +1,7 @@
 package com.example.myably.user;
 
 
+import com.example.myably.user.dto.GetUserRes;
 import com.example.myably.user.dto.LoginInfo;
 import com.example.myably.user.dto.PostCodeReq;
 import com.example.myably.user.dto.PostUserReq;
@@ -21,9 +22,10 @@ public class UserDao {
     }
 
     public void createUser(PostUserReq postuserReq){
-        String createUserQuery = "insert into User (nickName ,name, phoneNumber ,password) VALUES (?,?,?,?)";
+        System.out.println(postuserReq.getPassword());
+        String createUserQuery = "insert into User (email,nickName ,name, phoneNumber ,password) VALUES (?,?,?,?,?)";
         Object[] createUserParams = new Object[]{
-                postuserReq.getNickName(), postuserReq.getName(), postuserReq.getPhoneNumber(), postuserReq.getPassword()
+                postuserReq.getEmail(),postuserReq.getNickName(), postuserReq.getName(), postuserReq.getPhoneNumber(), postuserReq.getPassword()
         };
         this.jdbcTemplate.update(createUserQuery, createUserParams);
     }
@@ -32,6 +34,12 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject("select exists(select nickName from User where nickName = ?)",
                 int.class,
                 nickName);
+    }
+
+    public int checkEmail(String email){
+        return this.jdbcTemplate.queryForObject("select exists(select email from User where email = ?)",
+                int.class,
+                email);
     }
 
     public int checkPhoneNumber(String phoneNumber){
@@ -93,6 +101,16 @@ public class UserDao {
                             rs.getString("password"),
                             rs.getInt("userIdx")),
                     nickName);
+    }
+
+    public GetUserRes userInfo(int userIdx){
+        return this.jdbcTemplate.queryForObject("select * from User where userIdx = ?",
+                (rs, rowNum) -> new GetUserRes(
+                        rs.getString("email"),
+                        rs.getString("name"),
+                        rs.getString("nickName"),
+                        rs.getString("phoneNumber")),
+                userIdx);
     }
 
 }

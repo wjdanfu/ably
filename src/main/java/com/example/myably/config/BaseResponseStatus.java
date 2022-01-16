@@ -9,7 +9,7 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     POST_USERS_EXISTS_NICKNAME(false,2003,"중복된 닉네임입니다."),
-    POST_USERS_EXISTS_NAME(false,2004,"중복된 이름입니다."),
+    POST_USERS_EXISTS_EMAIL(false,2004,"중복된 이메일입니다."),
     PASSWORD_ENCRYPTION_ERROR(false, 2005, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 2006, "비밀번호 복호화에 실패하였습니다."),
     REQUEST_ERROR(false,2007,"입력값을 확인해 주세요"),
@@ -22,7 +22,8 @@ public enum BaseResponseStatus {
     NON_VERIFIED_PHONE_NUMBER(false,2014,"인증 완료된 휴대폰 번호가 아닙니다."),
     ALREADY_VERIFIED_PHONE(false,2015,"이미 인증 된 휴대폰 번호입니다."),
     NON_EXIST_USER(false,2016,"가입된 회원이 아닙니다."),
-    FAIL_LOGIN(false,2017,"비밀번호가 틀렸습니다.");
+    FAIL_LOGIN(false,2017,"비밀번호가 틀렸습니다."),
+    INVALID_USER_JWT(false,2018,"권한이 없는 유저의 접근입니다.");
 
 
     private final boolean isSuccess;

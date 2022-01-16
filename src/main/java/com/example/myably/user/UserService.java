@@ -29,17 +29,24 @@ public class UserService {
 
     @Transactional
     public void createUser(PostUserReq postUserReq) throws BaseException {
-        if (userDao.checkNickName(postUserReq.getNickName()) == 1) {
-            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
-        }
         if (userDao.checkAuthPhoneNumber(postUserReq.getPhoneNumber()) == 0 ||
                 userDao.checkPhoneVerify(postUserReq.getPhoneNumber()) == 'F'){
             throw new BaseException(NON_VERIFIED_PHONE_NUMBER);
         }
+        if (userDao.checkNickName(postUserReq.getNickName()) == 1) {
+            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+        }
+        if (userDao.checkPhoneNumber(postUserReq.getPhoneNumber()) == 1) {
+            throw new BaseException(POST_USERS_EXISTS_PHONE_NUMBER);
+        }
+        if (userDao.checkEmail(postUserReq.getEmail()) == 1) {
+            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+        }
         String pwd;
         try {
-            //암호화
+
             pwd = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(postUserReq.getPassword());
+
             postUserReq.setPassword(pwd);
             userDao.createUser(postUserReq);
         } catch (Exception ignored) {
@@ -99,7 +106,7 @@ public class UserService {
         else{
             loginInfo = userDao.checkNickNameAccount(nickName);
         }
-        System.out.println(loginInfo.getUserIdx());
+        //System.out.println(loginInfo.getUserIdx());
         try{
             realpw = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(loginInfo.getPassword());
         } catch (Exception ignored) {
@@ -115,5 +122,10 @@ public class UserService {
         else {
             throw new BaseException(FAIL_LOGIN);
         }
+    }
+
+    public GetUserRes userInfo(int userIdx) throws BaseException{
+        GetUserRes getUserRes = userDao.userInfo(userIdx);
+        return getUserRes;
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
+
 import static com.example.myably.config.BaseResponseStatus.*;
 import static com.example.myably.utils.ValidationRegex.*;
 
@@ -27,7 +29,7 @@ public class UserController {
     @PostMapping("/users")
     public BaseResponse createUser(@RequestBody PostUserReq postUserReq){
         if(postUserReq.getNickName() == null || postUserReq.getPassword()==null || postUserReq.getName()==null ||
-        postUserReq.getPhoneNumber()==null){
+        postUserReq.getPhoneNumber()==null || postUserReq.getEmail() ==null){
             return new BaseResponse<>(REQUEST_ERROR);
         }
         if(!isPhoneNumber(postUserReq.getPhoneNumber())){
@@ -90,6 +92,24 @@ public class UserController {
             PostLoginRes postLoginRes = userService.loginUser(postLoginReq);
             return new BaseResponse<>(postLoginRes);
         } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @GetMapping("/user/{userIdx}")
+    public BaseResponse<GetUserRes> userInfo(@PathVariable("userIdx") int userIdx){
+        try {
+            if (jwtService.getJwt() == null) {
+                return new BaseResponse<>(EMPTY_JWT);
+            }
+            int userIdxByJWT = jwtService.getUserIdx();
+            if (userIdxByJWT != userIdx){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            System.out.println(userIdx);
+            GetUserRes getUserRes = userService.userInfo(userIdx);
+            return new BaseResponse<>(getUserRes);
+        }catch (BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
     }
