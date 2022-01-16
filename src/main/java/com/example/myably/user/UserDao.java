@@ -1,10 +1,7 @@
 package com.example.myably.user;
 
 
-import com.example.myably.user.dto.GetUserRes;
-import com.example.myably.user.dto.LoginInfo;
-import com.example.myably.user.dto.PostCodeReq;
-import com.example.myably.user.dto.PostUserReq;
+import com.example.myably.user.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -56,9 +53,14 @@ public class UserDao {
         this.jdbcTemplate.update(createAuthQuery, createAuthparamas);
 
     }
-    public int updateCode(String phoneNumber, String code){
+    public void updateCode(String phoneNumber, String code){
         Object[] createAuthparamas = new Object[]{code, phoneNumber};
-        return this.jdbcTemplate.update("update auth set code = ? where phoneNumber = ?", createAuthparamas);
+        this.jdbcTemplate.update("update auth set code = ? where phoneNumber = ?", createAuthparamas);
+    }
+
+    public void updatePasswordCode(String phoneNumber, String code){
+        Object[] createAuthparamas = new Object[]{code, phoneNumber};
+        this.jdbcTemplate.update("update auth set code = ?, status= 'P' where phoneNumber = ?", createAuthparamas);
     }
 
     public int checkAuthPhoneNumber(String phoneNumber){
@@ -79,6 +81,10 @@ public class UserDao {
     }
     public void updateVerifyStatus(String phoneNumber){
         this.jdbcTemplate.update("update auth set status = 'T' where phoneNumber = ?",phoneNumber);
+    }
+
+    public void updateVerifyPasswordStatus(String phoneNumber){
+        this.jdbcTemplate.update("update auth set status = 'C' where phoneNumber = ?",phoneNumber);
     }
 
     public char checkPhoneVerify(String phoneNumber){
@@ -119,6 +125,12 @@ public class UserDao {
                         rs.getString("nickName"),
                         rs.getString("phoneNumber")),
                 userIdx);
+    }
+
+    public void changePassword(ChangePasswordReq changePasswordReq){
+        Object[] updatePassword = new Object[]{changePasswordReq.getPassword(), changePasswordReq.getPhoneNumber()};
+        this.jdbcTemplate.update("update User set password = ? where phoneNumber = ?",updatePassword);
+
     }
 
 }

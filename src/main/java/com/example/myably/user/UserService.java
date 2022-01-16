@@ -71,6 +71,19 @@ public class UserService {
     }
 
     @Transactional
+    public String phonePasswordAuth(String phoneNumber) throws BaseException{
+        if(userDao.checkPhoneNumber(phoneNumber) != 1)
+            throw new BaseException(NON_EXIST_USER);
+        try{
+            String code = createCode();
+            userDao.updatePasswordCode(phoneNumber, code);
+            return code;
+        }catch (Exception ignored) {
+            throw new BaseException(SEND_CODE_ERROR);
+        }
+    }
+
+    @Transactional
     public void verifyCode(PostCodeReq postCodeReq) throws BaseException {
         if(userDao.checkAuthPhoneNumber(postCodeReq.getPhoneNumber()) == 0) {
             throw new BaseException(NON_EXIST_PHONE_CODE);
@@ -84,6 +97,11 @@ public class UserService {
         else{
             userDao.updateVerifyStatus(postCodeReq.getPhoneNumber());
         }
+    }
+
+    @Transactional
+    public void verifyPasswordCode(PostCodeReq postCodeReq) throws BaseException {
+        userDao.updateVerifyPasswordStatus(postCodeReq.getPhoneNumber());
     }
 
     @Transactional
@@ -134,4 +152,23 @@ public class UserService {
         GetUserRes getUserRes = userDao.userInfo(userIdx);
         return getUserRes;
     }
+
+    public char authStatus(String phoneNumber){
+        return userDao.checkPhoneVerify(phoneNumber);
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordReq changePasswordReq) throws BaseException{
+        String pwd;
+        try {
+            pwd = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(changePasswordReq.getPassword());
+            changePasswordReq.setPassword(pwd);
+            userDao.changePassword(changePasswordReq);
+            userDao.updateVerifyStatus(changePasswordReq.getPhoneNumber());
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
+        }
+    }
+
+
 }
