@@ -50,9 +50,6 @@ public class UserController {
         if(postPhoneReq.getPhoneNumber() == null){
             return new BaseResponse<>(REQUEST_ERROR);
         }
-        if(userService.authStatus(postPhoneReq.getPhoneNumber())!='F'){
-            return new BaseResponse<>(POST_USERS_EXISTS_PHONE_NUMBER);
-        }
         if(!isPhoneNumber(postPhoneReq.getPhoneNumber())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE_NUMBER);
         }
@@ -73,26 +70,14 @@ public class UserController {
         if(!isPhoneNumber(postCodeReq.getPhoneNumber())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE_NUMBER);
         }
-        if (userService.authStatus(postCodeReq.getPhoneNumber())!='P')
-            try{
-                if(postCodeReq.getCode() == null){
-                    return new BaseResponse<>(POST_AUTH_EMPTY_CODE);
-                }
-                userService.verifyCode(postCodeReq);
-                return new BaseResponse<>("인증 완료");
-            } catch(BaseException exception){
-                return new BaseResponse<>((exception.getStatus()));
+        try{
+            if(postCodeReq.getCode() == null){
+                return new BaseResponse<>(POST_AUTH_EMPTY_CODE);
             }
-        else{
-            try{
-                if(postCodeReq.getCode() == null){
-                    return new BaseResponse<>(POST_AUTH_EMPTY_CODE);
-                }
-                userService.verifyPasswordCode(postCodeReq);
-                return new BaseResponse<>("인증 완료");
-            } catch(BaseException exception){
-                return new BaseResponse<>((exception.getStatus()));
-            }
+            userService.verifyCode(postCodeReq);
+            return new BaseResponse<>("인증 완료");
+        } catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 
@@ -147,6 +132,25 @@ public class UserController {
             return new BaseResponse<>(code);
         }
         catch(BaseException exception){
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    @PostMapping("/phone/password/verify")
+    public BaseResponse<String> verifyPasswordCode(@RequestBody PostCodeReq postCodeReq) {
+        if(postCodeReq.getPhoneNumber() == null){
+            return new BaseResponse<>(REQUEST_ERROR);
+        }
+        if(!isPhoneNumber(postCodeReq.getPhoneNumber())){
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE_NUMBER);
+        }
+        try{
+            if(postCodeReq.getCode() == null){
+                return new BaseResponse<>(POST_AUTH_EMPTY_CODE);
+            }
+            userService.verifyPasswordCode(postCodeReq);
+            return new BaseResponse<>("인증 완료");
+        } catch(BaseException exception){
             return new BaseResponse<>((exception.getStatus()));
         }
     }

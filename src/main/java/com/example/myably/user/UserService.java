@@ -61,6 +61,10 @@ public class UserService {
         try{
             String code = createCode();
             if(userDao.checkAuthPhoneNumber(phoneNumber) == 1)
+                if(userDao.checkPhoneVerify(phoneNumber)!='F'){
+                    throw new BaseException(POST_USERS_EXISTS_PHONE_NUMBER);
+                }
+                else
                 userDao.updateCode(phoneNumber, code);
             else
                 userDao.createAuth(phoneNumber, code);
@@ -91,7 +95,7 @@ public class UserService {
         if(userDao.checkAuthCode(postCodeReq) == 0) {
             throw new BaseException(INVALID_AUTH_PHONE_CODE);
         }
-        if(userDao.checkPhoneVerify(postCodeReq.getPhoneNumber())=='T'){
+        if(userDao.checkPhoneVerify(postCodeReq.getPhoneNumber())!='F'){
             throw new BaseException(ALREADY_VERIFIED_PHONE);
         }
         else{
@@ -101,6 +105,15 @@ public class UserService {
 
     @Transactional
     public void verifyPasswordCode(PostCodeReq postCodeReq) throws BaseException {
+        if(userDao.checkAuthPhoneNumber(postCodeReq.getPhoneNumber()) == 0 ||
+                userDao.checkPhoneVerify(postCodeReq.getPhoneNumber()) !='P') {
+            throw new BaseException(NON_EXIST_PHONE_CODE);
+        }
+        if(userDao.checkAuthCode(postCodeReq) == 0) {
+            throw new BaseException(INVALID_AUTH_PHONE_CODE);
+        }
+        if(userDao.checkPhoneNumber(postCodeReq.getPhoneNumber()) != 1)
+            throw new BaseException(NON_EXIST_USER);
         userDao.updateVerifyPasswordStatus(postCodeReq.getPhoneNumber());
     }
 
