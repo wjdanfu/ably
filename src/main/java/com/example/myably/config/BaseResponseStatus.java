@@ -23,7 +23,9 @@ public enum BaseResponseStatus {
     ALREADY_VERIFIED_PHONE(false,2015,"이미 인증 된 휴대폰 번호입니다."),
     NON_EXIST_USER(false,2016,"가입된 회원이 아닙니다."),
     FAIL_LOGIN(false,2017,"비밀번호가 틀렸습니다."),
-    INVALID_USER_JWT(false,2018,"권한이 없는 유저의 접근입니다.");
+    INVALID_USER_JWT(false,2018,"권한이 없는 유저의 접근입니다."),
+    POST_USERS_INVALID_EMAIL(false,2019,"이메일 형식을 확인해 주세요"),
+    CHECK_INPUT(false,2020,"입력한 정보가 맞는지 확인 해주세요");
 
 
     private final boolean isSuccess;

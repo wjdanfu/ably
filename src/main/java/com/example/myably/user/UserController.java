@@ -35,6 +35,9 @@ public class UserController {
         if(!isPhoneNumber(postUserReq.getPhoneNumber())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE_NUMBER);
         }
+        if(!isRegexEmail(postUserReq.getEmail())){
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
         try{
             userService.createUser(postUserReq);
             return new BaseResponse();
@@ -80,13 +83,16 @@ public class UserController {
 
     @PostMapping("/login")
     public BaseResponse<PostLoginRes> loginUser(@RequestBody PostLoginReq postLoginReq) {
-        if(postLoginReq.getPhoneNumber() == null && postLoginReq.getNickName() ==null){
+        if(postLoginReq.getPhoneNumber() == null && postLoginReq.getNickName() ==null && postLoginReq.getEmail()==null){
             return new BaseResponse<>(REQUEST_ERROR);
         }else if (postLoginReq.getPassword()==null){
             return new BaseResponse<>(REQUEST_ERROR);
         }
         if(postLoginReq.getPhoneNumber() != null && !isPhoneNumber(postLoginReq.getPhoneNumber())){
             return new BaseResponse<>(POST_USERS_INVALID_PHONE_NUMBER);
+        }
+        if(postLoginReq.getEmail() != null && !isRegexEmail(postLoginReq.getEmail())){
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
         try{
             PostLoginRes postLoginRes = userService.loginUser(postLoginReq);
@@ -106,7 +112,6 @@ public class UserController {
             if (userIdxByJWT != userIdx){
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            System.out.println(userIdx);
             GetUserRes getUserRes = userService.userInfo(userIdx);
             return new BaseResponse<>(getUserRes);
         }catch (BaseException exception){

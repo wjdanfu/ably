@@ -90,23 +90,29 @@ public class UserService {
     public PostLoginRes loginUser(PostLoginReq postLoginReq) throws BaseException{
         String phoneNumber = postLoginReq.getPhoneNumber();
         String nickName = postLoginReq.getNickName();
+        String email = postLoginReq.getEmail();
 
         PostLoginRes postLoginRes = new PostLoginRes();
 
         if(userDao.checkPhoneNumber(phoneNumber) == 0 &&
-                userDao.checkNickName(nickName) == 0){
+                userDao.checkNickName(nickName) == 0 && userDao.checkEmail(email)==0){
             throw new BaseException(NON_EXIST_USER);
         }
 
         String realpw;
         LoginInfo loginInfo;
-        if(nickName == null){
+        try{
+        if(phoneNumber == null){
+            if (email ==null) {
+                loginInfo = userDao.checkNickNameAccount(nickName);
+            }else{
+                loginInfo = userDao.checkEmailAccount(email);
+            }
+        }else{
             loginInfo = userDao.checkPhoneNumberAccount(phoneNumber);
+        }}catch (Exception ignored){
+            throw new BaseException(CHECK_INPUT);
         }
-        else{
-            loginInfo = userDao.checkNickNameAccount(nickName);
-        }
-        //System.out.println(loginInfo.getUserIdx());
         try{
             realpw = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(loginInfo.getPassword());
         } catch (Exception ignored) {

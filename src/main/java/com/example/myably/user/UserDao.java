@@ -95,6 +95,14 @@ public class UserDao {
                 phoneNumber);
     }
 
+    public LoginInfo checkEmailAccount(String email) {
+        return this.jdbcTemplate.queryForObject("select password, userIdx from user where email=?",
+                (rs, rowNum) -> new LoginInfo(
+                        rs.getString("password"),
+                        rs.getInt("userIdx")),
+                email);
+    }
+
     public LoginInfo checkNickNameAccount(String nickName){
             return this.jdbcTemplate.queryForObject("select password, userIdx from user where nickName=?",
                     (rs, rowNum) -> new LoginInfo(
