@@ -1,5 +1,5 @@
-DROP TABLE if exists User;
-DROP TABLE if exists Auth;
+-- DROP TABLE if exists User;
+-- DROP TABLE if exists Auth;
 
 CREATE TABLE IF NOT EXISTS User
 (

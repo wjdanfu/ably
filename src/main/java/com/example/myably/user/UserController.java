@@ -26,7 +26,7 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/users")
+    @PostMapping("/user")
     public BaseResponse createUser(@RequestBody PostUserReq postUserReq){
         if(postUserReq.getNickName() == null || postUserReq.getPassword()==null || postUserReq.getName()==null ||
         postUserReq.getPhoneNumber()==null || postUserReq.getEmail() ==null){
@@ -45,7 +45,7 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-    @PostMapping("/phone/code/account")
+    @PostMapping("/account/code")
     public BaseResponse<String> phoneAuth(@RequestBody PostPhoneReq postPhoneReq) {
         if(postPhoneReq.getPhoneNumber() == null){
             return new BaseResponse<>(REQUEST_ERROR);
@@ -62,7 +62,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/phone/verify")
+    @PostMapping("/account/verify")
     public BaseResponse<String> verifyCode(@RequestBody PostCodeReq postCodeReq) {
         if(postCodeReq.getPhoneNumber() == null){
             return new BaseResponse<>(REQUEST_ERROR);
@@ -119,7 +119,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/phone/code/password")
+    @PostMapping("/reset-password/code")
     public BaseResponse<String> phonePasswordAuth(@RequestBody PostPhoneReq postPhoneReq) {
         if(postPhoneReq.getPhoneNumber() == null){
             return new BaseResponse<>(REQUEST_ERROR);
@@ -136,7 +136,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/phone/password/verify")
+    @PostMapping("/reset-password/verify")
     public BaseResponse<String> verifyPasswordCode(@RequestBody PostCodeReq postCodeReq) {
         if(postCodeReq.getPhoneNumber() == null){
             return new BaseResponse<>(REQUEST_ERROR);
@@ -155,7 +155,7 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/reset-password")
     public BaseResponse<String> changePassword(@RequestBody ChangePasswordReq changePasswordReq){
         System.out.println(changePasswordReq.getPhoneNumber());
         System.out.println(changePasswordReq.getPassword());
