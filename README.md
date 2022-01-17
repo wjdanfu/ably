@@ -19,7 +19,9 @@ java -jar build/libs/myably-0.0.1-SNAPSHOT.jar
   - http://localhost:8080/swagger-ui.html#/
 
 - db 확인
-    - db에 있는 값을 확인 하려면 해당 링크로 접속하셔서 확인하시면 됩니다 (User Name : sa)
+    - db에 있는 값을 확인 하려면 해당 링크로 접속하셔서 확인하시면 됩니다 
+    - JDBC URL : jdbc:h2:~/ably
+    - User Name : sa
 
     - http://localhost:8080/h2-console/
 
