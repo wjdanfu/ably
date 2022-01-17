@@ -172,6 +172,8 @@ public class UserService {
 
     @Transactional
     public void changePassword(ChangePasswordReq changePasswordReq) throws BaseException{
+        if(userDao.checkPhoneNumber(changePasswordReq.getPhoneNumber()) != 1)
+            throw new BaseException(NON_EXIST_USER);
         String pwd;
         try {
             pwd = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(changePasswordReq.getPassword());

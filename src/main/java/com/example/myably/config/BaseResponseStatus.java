@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum BaseResponseStatus {
-    SUCCESS(true, 1000, "요청에 성공하였습니다."),
+    SUCCESS(true, 1000, "성공"),
 
     EMPTY_JWT(false, 2001, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),

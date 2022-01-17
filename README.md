@@ -10,25 +10,26 @@ jdk가 설치가 안되어있으면 먼저 설치해주세요 (본 과제는 jdk
 ./gradlew clean build
 java -jar build/libs/myably-0.0.1-SNAPSHOT.jar
 ```
-### Prerequisites
+### 사용 방법
+- api 테스트 
+  - 해당 링크에서 Example Value (json 형식)을 참고하여 request를 보내면서 테스트 할 수 있습니다. 
+  
+  - http://localhost:8080/swagger-ui.html#/
 
-What things you need to install the software and how to install them
+- db 확인
+    - db에 있는 값을 확인 하려면 해당 링크로 접속하셔서 확인하시면 됩니다 (User Name : sa)
 
-```
-Give examples
-```
+    - http://localhost:8080/h2-console/
 
-### Installing
+### 사용 기술
+- Spring boot
+- h2
+- swagger
+- jwt
 
-A step by step series of examples that tell you how to get a development env running
+### 참고 사항
+- 실제로 외부 서비스와 연동하여, SMS를 보내도록 구현하지 않아도 된다는 요구 사항이 있어 **휴대폰 인증 코드는 response 값**에 넣어 주었습니다.
 
-Say what the step will be
 
-```
-Give the example
-```
 
-And repeat
 
-```
-until finished
